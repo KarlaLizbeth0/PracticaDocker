@@ -1,0 +1,40 @@
+﻿Descarga de la imagen de wordpress
+PS C:\Users\kali_> docker pull wordpress:4.7.2-apache
+Descarga de la imagen mariadb
+PS C:\Users\kali_> docker pull mariadb:10.0.29
+
+
+
+
+Crear una network con el driver bridge para FrontEnd
+PS C:\Users\kali_> docker network create --driver bridge FrontEnd
+Crear una network con el driver bridge para BackEnd
+
+
+
+
+PS C:\Users\kali_> docker network create --driver bridge BackEnd
+Levantar el CMS de Wordpress con salida en el puerto 8080 con conexión a la base de datos worpress01
+PS C:\Users\kali_> docker run --name wordpress01 -d -p 80:80 --mount src=VL_wordpress01,dst=/var/www/html --network=FrontEnd wordpress:4.7.2-apache
+
+
+
+
+Creación del volumen para mariadb con nombre VL_mariadb01 en el host /var/lib/mysql para almacenar información en el contenedor.
+PS C:\Users\kali_> docker run --name mariadb01 -d -e MYSQL_ROOT_PASSWORRD=root -e MYSQL_DATABASE=wordpress01 -e MYSQL_USER=user -e MYSQL_PASSWORD=userP --network=BackEnd --mount src=VL_mariadb01,dst=/var/lib/mysql mariadb:10.0.29
+
+
+
+
+Realizar la conexión con wordpress01
+PS C:\Users\kali_> docker network connect BackEnd wordpress01
+
+
+
+
+Inspeccionar mariadb para visualizar el volumen y obtener la dirección IP  
+PS C:\Users\kali_> docker inspect mariadb01
+
+
+
+Karla Lizbeth Ramirez Perez | 18011851
